@@ -8,7 +8,7 @@ import rlcompleter
 import sys
 import types
 from itertools import count
-from typing import Optional
+from typing import Any, Dict, List, Optional, TypeVar, Union
 
 izip = zip
 
@@ -153,23 +153,26 @@ class DefaultConfig:
             self.use_colors = supports_color
 
 
-def my_execfile(filename, mydict):
+def my_execfile(filename: str, mydict: Dict[str, Any]):
     with open(filename) as f:
         code = compile(f.read(), filename, "exec")
         exec(code, mydict)
 
 
 class ConfigurableClass:
-    DefaultConfig = None
-    config_filename = None
+    DefaultConfig: Optional[type] = None
+    config_filename: Optional[str] = None
 
     def get_config(self, Config):
         if Config is not None:
             return Config()
+
         # try to load config from the ~/filename file
-        filename = "~/" + self.config_filename
+        filename = f"~/{self.config_filename}"
         rcfile = os.path.normpath(os.path.expanduser(filename))
         if not os.path.exists(rcfile):
+            if self.DefaultConfig is None:
+                raise ValueError("DefaultConfig cannot be None")
             return self.DefaultConfig()
 
         mydict = {}
@@ -180,11 +183,15 @@ class ConfigurableClass:
 
             sys.stderr.write(f"** error when importing {filename}: {exc!r} **\n")
             traceback.print_tb(sys.exc_info()[2])
+            if self.DefaultConfig is None:
+                raise ValueError("DefaultConfig cannot be None")
             return self.DefaultConfig()
 
         try:
             Config = mydict["Config"]
         except KeyError:
+            if self.DefaultConfig is None:
+                raise ValueError("DefaultConfig cannot be None")
             return self.DefaultConfig()
 
         try:
@@ -196,11 +203,11 @@ class ConfigurableClass:
                 tb = tb.tb_next
                 err_fname = tb.tb_frame.f_code.co_filename
                 err_lnum = tb.tb_lineno
-                err += " (%s:%d)" % (
-                    err_fname,
-                    err_lnum,
-                )
-            sys.stderr.write("** %s **\n" % err)
+                err += f" ({err_fname}:{err_lnum})"
+            sys.stderr.write(f"** {err} **\n")
+
+        if self.DefaultConfig is None:
+            raise ValueError("DefaultConfig cannot be None")
         return self.DefaultConfig()
 
 
@@ -235,19 +242,15 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             delims = delims.replace("]", "")
             readline.set_completer_delims(delims)
 
-    def complete(self, text, state):
-        """
-        stolen from:
-        http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/496812
-        """
-        if text == "":
+    def complete(self, text: str, state: int):
+        # stolen from: http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/496812
+        if not text:
             return ["\t", None][state]
-        else:
-            return rlcompleter.Completer.complete(self, text, state)
+
+        return rlcompleter.Completer.complete(self, text, state)
 
     def _callable_postfix(self, val, word):
-        # disable automatic insertion of '(' for global callables:
-        # this method exists only in Python 2.6+
+        # disable automatic insertion of '(' for global callables
         return word
 
     def global_matches(self, text):
@@ -351,10 +354,10 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
                 color = "00"
         # hack: prepend an (increasing) fake escape sequence,
         # so that readline can sort the matches correctly.
-        return "\x1b[%03d;00m" % i + Color.set(color, name)
+        return f"\x1b[{i+Color.set(color, name):03d};00m"
 
 
-def commonprefix(names, base=""):
+def commonprefix(names: List[str], base: str = ""):
     """return the common prefix of all 'names' starting with 'base'"""
     if base:
         names = [x for x in names if x.startswith(base)]
