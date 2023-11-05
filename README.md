@@ -1,8 +1,9 @@
-fancycompleter: colorful Python TAB completion
-==============================================
+# fancycompleter: colorful Python TAB completion
 
-What is is?
------------
+[![Tests](https://github.com/bretello/fancycompleter/actions/workflows/tests.yaml/badge.svg)](https://github.com/bretello/fancycompleter/actions/workflows/tests.yaml)
+[![codecov](https://codecov.io/gh/bretello/fancycompleter/graph/badge.svg?token=M70VF5GAP8)](https://codecov.io/gh/bretello/fancycompleter)
+
+## What is is?
 
 `fancycompleter` is a module to improve your experience in Python by
 adding TAB completion to the interactive prompt. It is an extension of
