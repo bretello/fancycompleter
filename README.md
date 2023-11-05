@@ -23,26 +23,24 @@ fuchsia. Everything else is plain white.
 don\'t work on Python 3, see the section [How do I get
 colors?](#how-do-i-get-colors) for details.
 
-Other features
---------------
+## Other features
 
--   To save space on screen, `fancycompleter` only shows the characters
-    "after the dot". By contrast, in the example above `rlcompleter`
-    shows everything prepended by `"sys."`.
--   If we press `<TAB>` at the beginning of the line, a real tab
-    character is inserted, instead of trying to complete. This is useful
-    when typing function bodies or multi-line statements at the prompt.
--   Unlike `rlcompleter`, `fancycompleter` **does** complete expressions
-    containing dictionary or list indexing. For example,
-    `mydict['foo'].<TAB>` works (assuming that `mydict` is a dictionary
-    and that it contains the key `'foo'`, of course :-)).
--   Starting from Python 2.6, if the completed name is a callable,
-    `rlcompleter` automatically adds an open parenthesis `(`. This is
-    annoying in case we do not want to really call it, so
-    `fancycompleter` disable this behaviour.
+- To save space on screen, `fancycompleter` only shows the characters
+  "after the dot". By contrast, in the example above `rlcompleter`
+  shows everything prepended by `"sys."`.
+- If we press `<TAB>` at the beginning of the line, a real tab
+  character is inserted, instead of trying to complete. This is useful
+  when typing function bodies or multi-line statements at the prompt.
+- Unlike `rlcompleter`, `fancycompleter` **does** complete expressions
+  containing dictionary or list indexing. For example,
+  `mydict['foo'].<TAB>` works (assuming that `mydict` is a dictionary
+  and that it contains the key `'foo'`, of course :-)).
+- Starting from Python 2.6, if the completed name is a callable,
+  `rlcompleter` automatically adds an open parenthesis `(`. This is
+  annoying in case we do not want to really call it, so
+  `fancycompleter` disable this behaviour.
 
-Installation
-------------
+## Installation
 
 First, install the module with `pip` or `easy_install`:
 
@@ -75,8 +73,7 @@ line in the startup file, else the next lines might not be executed. See
 section [What is really going on?](#what-is-really-going-on) for
 details.
 
-How do I get colors?
---------------------
+## How do I get colors?
 
 If you are using **PyPy**, you can stop reading now, as `fancycompleter`
 will work out of the box.
@@ -94,9 +91,9 @@ the completions, so completions with colors are not displayed correctly.
 
 There are two ways to solve it:
 
-> -   (suggested) don\'t use `readline` at all and rely on
->     [pyrepl](http://codespeak.net/pyrepl/)
-> -   use a patched version of `readline` to allow colors
+> - (suggested) don\'t use `readline` at all and rely on
+>   [pyrepl](http://codespeak.net/pyrepl/)
+> - use a patched version of `readline` to allow colors
 
 By default, `fancycompleter` tries to use `pyrepl` if it finds it. To
 get colors you need a recent version, \>= 0.8.2.
@@ -116,26 +113,25 @@ If you are using **Python 3**, `pyrepl` does not work, and thus is not
 installed. Your only option to get colors is to use a patched
 `readline`, as explained below.
 
-I really want to use readline
------------------------------
+## I really want to use readline
 
 This method is not really recommended, but if you really want, you can
 use use a patched readline: you can find the patches in the `misc/`
 directory:
 
-> -   for
->     [readline-5.2](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/readline-escape-5.2.patch)
-> -   for
->     [readline-6.0](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/readline-escape-6.0.patch)
+> - for
+>   [readline-5.2](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/readline-escape-5.2.patch)
+> - for
+>   [readline-6.0](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/readline-escape-6.0.patch)
 
 You can also try one of the following precompiled versions, which has
 been tested on Ubuntu 10.10: remember to put them in a place where the
 linker can find them, e.g. by setting `LD_LIBRARY_PATH`:
 
-> -   readline-6.0 for
->     [32-bit](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/libreadline.so.6-32bit)
-> -   readline-6.0 for
->     [64-bit](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/libreadline.so.6-64bit)
+> - readline-6.0 for
+>   [32-bit](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/libreadline.so.6-32bit)
+> - readline-6.0 for
+>   [64-bit](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/libreadline.so.6-64bit)
 
 Once it is installed, you should double-check that you can find it, e.g.
 by running `ldd` on Python\'s `readline.so` module:
@@ -150,16 +146,14 @@ is
 [here](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/fancycompleterrc.py)
 (remind that you need to put a dot in front of the filename!).
 
-Customization
--------------
+## Customization
 
 To customize the configuration of fancycompleter, you need to put a file
 named `.fancycompleterrc.py` in your home directory. The file must
 contain a class named `Config` inheriting from `DefaultConfig` and
 overridding the desired values.
 
-What is really going on?
-------------------------
+## What is really going on?
 
 The default and preferred way to get colors is to use `pyrepl`. However,
 there is no way to tell CPython to use `pyrepl` instead of the built-in
