@@ -8,47 +8,17 @@ import rlcompleter
 import sys
 import types
 from itertools import count
-from typing import Any, Dict, List, Optional, TypeVar, Union
+from typing import Any, Dict, List, Optional, TypeVar
+
+T = TypeVar("T")
 
 izip = zip
 
 
-class LazyVersion:
-    def __init__(self, pkg):
-        self.pkg = pkg
-        self.__version = None
-
-    @property
-    def version(self):
-        if self.__version is None:
-            self.__version = self._load_version()
-        return self.__version
-
-    def _load_version(self):
-        try:
-            from pkg_resources import DistributionNotFound, get_distribution
-        except ImportError:
-            return "N/A"
-        #
-        try:
-            return get_distribution(self.pkg).version
-        except DistributionNotFound:
-            # package is not installed
-            return "N/A"
-
-    def __repr__(self):
-        return self.version
-
-    def __eq__(self, other):
-        return self.version == other
-
-    def __ne__(self, other):
-        return not self == other
-
-
-__version__ = LazyVersion(__name__)
-
-# ----------------------
+try:
+    from .version import __version__
+except ImportError:
+    __version__ == "unknown"
 
 
 class Color:

@@ -2,13 +2,15 @@ from setuptools import setup
 
 setup(
     name="fancycompleter",
-    setup_requires="setupmeta",
+    setup_requires=["setuptools_scm"],
+    version_file="fancycompleter/_version.py",
+    use_scm_version=True,
     versioning="devcommit",
     maintainer="Daniel Hahler",
     url="https://github.com/pdbpp/fancycompleter",
+    package_dir={"": "fancycompleter"},
     author="Antonio Cuni",
     author_email="anto.cuni@gmail.com",
-    py_modules=["fancycompleter"],
     license="BSD",
     description="colorful TAB completion for Python prompt",
     keywords="rlcompleter prompt tab color completion",
