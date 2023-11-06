@@ -8,7 +8,7 @@ setup(
     versioning="devcommit",
     maintainer="Daniel Hahler",
     url="https://github.com/pdbpp/fancycompleter",
-    package_dir={"": "fancycompleter"},
+    packages=["fancycompleter"],
     author="Antonio Cuni",
     author_email="anto.cuni@gmail.com",
     license="BSD",
