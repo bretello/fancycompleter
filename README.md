@@ -7,8 +7,7 @@
 
 `fancycompleter` is a module to improve your experience in Python by
 adding TAB completion to the interactive prompt. It is an extension of
-the stdlib\'s
-[rlcompleter](http://docs.python.org/library/rlcompleter.html) module.
+the stdlib's [rlcompleter](http://docs.python.org/library/rlcompleter.html) module.
 
 Its best feature is that the completions are displayed in different
 colors, depending on their type:
@@ -20,7 +19,7 @@ integers and boolean in yellows, `None` in gray, types and classes in
 fuchsia. Everything else is plain white.
 
 `fancycompleter` is compatible with Python 3. However, by default colors
-don\'t work on Python 3, see the section [How do I get
+don't work on Python 3, see the section [How do I get
 colors?](#how-do-i-get-colors) for details.
 
 ## Other features
@@ -42,15 +41,19 @@ colors?](#how-do-i-get-colors) for details.
 
 ## Installation
 
-First, install the module with `pip` or `easy_install`:
+First, install the module with `pip`:
 
-    $ pip install fancycompleter
+```bash
+pip install git+https://github.com/bretello/fancycompleter
+```
 
 Then, at the Python interactive prompt:
 
-    >>> import fancycompleter
-    >>> fancycompleter.interact(persist_history=True)
-    >>>
+```console
+>>> import fancycompleter
+>>> fancycompleter.interact(persist_history=True)
+>>>
+```
 
 If you want to enable `fancycompleter` automatically at startup, you can
 add those two lines at the end of your
@@ -60,7 +63,9 @@ script.
 If you do **not** have a `PYTHONSTARTUP` script, the
 following command will create one for you in `~/python_startup.py`:
 
-    $ python -m fancycompleter install
+```bash
+python -m fancycompleter install
+```
 
 On Windows, `install` automatically sets the `PYTHONSTARTUP` environment
 variable. On other systems, you need to add the proper command in
@@ -81,7 +86,7 @@ will work out of the box.
 If you are using **CPython on Linux/OSX** and you installed
 `fancycompleter` with `pip` or `easy_install`, they automatically
 installed `pyrepl` as a requirement, and you should also get colors out
-of the box. If for some reason you don\'t want to use `pyrepl`, you
+of the box. If for some reason you don't want to use `pyrepl`, you
 should keep on reading.
 
 By default, in CPython line input and TAB completion are handled by [GNU
@@ -91,12 +96,12 @@ the completions, so completions with colors are not displayed correctly.
 
 There are two ways to solve it:
 
-> - (suggested) don\'t use `readline` at all and rely on
+> - (suggested) don't use `readline` at all and rely on
 >   [pyrepl](http://codespeak.net/pyrepl/)
 > - use a patched version of `readline` to allow colors
 
 By default, `fancycompleter` tries to use `pyrepl` if it finds it. To
-get colors you need a recent version, \>= 0.8.2.
+get colors you need a recent version, >= 0.8.2.
 
 Starting from version 0.6.1, `fancycompleter` works also on **Windows**,
 relying on [pyreadline](https://pypi.python.org/pypi/pyreadline). At the
@@ -127,8 +132,8 @@ overridding the desired values.
 The default and preferred way to get colors is to use `pyrepl`. However,
 there is no way to tell CPython to use `pyrepl` instead of the built-in
 readline at the interactive prompt: this means that even if we install
-our completer inside pyrepl\'s readline library, the interactive prompt
-won\'t see it.
+our completer inside pyrepl's readline library, the interactive prompt
+won't see it.
 
 The issue is simply solved by avoiding to use the built-in prompt:
 instead, we use a pure Python replacement based on
