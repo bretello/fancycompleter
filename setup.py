@@ -28,7 +28,7 @@ setup(
         "Topic :: Utilities",
     ],
     install_requires=[
-        "pyrepl @ git+https://github.com/bretello/pyrepl",
+        "pyrepl @ git+https://github.com/bretello/pyrepl@0.10.0",
         "pyreadline;platform_system=='Windows'",
     ],
 )
