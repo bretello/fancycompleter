@@ -303,18 +303,17 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             names += [" "]
         return names
 
-    def color_matches(self, names, values):
+    def color_matches(self, names: List[str], values):
         matches = [
             self.color_for_obj(i, name, obj)
-            for i, name, obj in izip(count(), names, values)
+            for i, name, obj in zip(count(), names, values)
         ]
         # We add a space at the end to prevent the automatic completion of the
         # common prefix, which is the ANSI ESCAPE sequence.
         return matches + [" "]
 
-    def color_for_obj(self, i, name, value):
-        t = type(value)
-        color = self.config.color_by_type.get(t, None)
+    def color_for_obj(self, i: int, name: str, value: Any) -> str:
+        color = self.config.color_by_type.get(type(value), None)
         if color is None:
             for x, _color in self.config.color_by_baseclass:
                 if isinstance(value, x):
@@ -324,7 +323,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
                 color = "00"
         # hack: prepend an (increasing) fake escape sequence,
         # so that readline can sort the matches correctly.
-        return f"\x1b[{i+Color.set(color, name):03d};00m"
+        return f"\x1b[{i:03d};00m" + Color.set(color, name)
 
 
 def commonprefix(names: List[str], base: str = ""):
