@@ -8,12 +8,7 @@ import rlcompleter
 import sys
 import types
 from itertools import count
-from typing import Any, Dict, List, Optional, TypeVar
-
-T = TypeVar("T")
-
-izip = zip
-
+from typing import Any, Dict, List, Optional
 
 try:
     from .version import __version__
@@ -40,7 +35,7 @@ class Color:
     white = "37;01"
 
     @classmethod
-    def set(cls, color, string):
+    def set(cls, color: str, string: str):
         with contextlib.suppress(AttributeError):
             color = getattr(cls, color)
         return f"\x1b[{color}m{string}\x1b[00m"
@@ -223,7 +218,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
         # disable automatic insertion of '(' for global callables
         return word
 
-    def global_matches(self, text):
+    def global_matches(self, text: str) -> List[str]:
         import keyword
 
         names = rlcompleter.Completer.global_matches(self, text)
@@ -232,7 +227,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             return [prefix]
 
         names.sort()
-        values = []
+        values: List[Optional[str]] = []
         for name in names:
             clean_name = name.rstrip(": ")
             if clean_name in keyword.kwlist:
@@ -246,7 +241,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             return self.color_matches(names, values)
         return names
 
-    def attr_matches(self, text):
+    def attr_matches(self, text: str) -> List[str]:
         expr, attr = text.rsplit(".", 1)
         if "(" in expr or ")" in expr:  # don't call functions
             return []
@@ -300,7 +295,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             return self.color_matches(names, values)
 
         if prefix:
-            names += [" "]
+            names.append(" ")
         return names
 
     def color_matches(self, names: List[str], values):
