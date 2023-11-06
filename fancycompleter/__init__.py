@@ -18,7 +18,7 @@ izip = zip
 try:
     from .version import __version__
 except ImportError:
-    __version__ == "unknown"
+    __version__ = "unknown"
 
 
 class Color:
@@ -154,14 +154,14 @@ class ConfigurableClass:
             sys.stderr.write(f"** error when importing {filename}: {exc!r} **\n")
             traceback.print_tb(sys.exc_info()[2])
             if self.DefaultConfig is None:
-                raise ValueError("DefaultConfig cannot be None")
+                raise ValueError("DefaultConfig cannot be None") from None
             return self.DefaultConfig()
 
         try:
             Config = mydict["Config"]
         except KeyError:
             if self.DefaultConfig is None:
-                raise ValueError("DefaultConfig cannot be None")
+                raise ValueError("DefaultConfig cannot be None") from None
             return self.DefaultConfig()
 
         try:

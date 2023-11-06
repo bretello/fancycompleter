@@ -27,7 +27,7 @@ def test_complete_attribute():
 
 
 def test_complete_attribute_prefix():
-    class C(object):
+    class C:
         attr = 1
         _attr = 2
         __attr__attr = 3
@@ -99,18 +99,11 @@ def test_complete_global_colored():
 
 def test_complete_global_colored_exception():
     compl = Completer({"tryme": ValueError()}, ColorConfig)
-    if sys.version_info >= (3, 6):
-        assert compl.global_matches("try") == [
-            "\x1b[000;00m\x1b[37mtry:\x1b[00m",
-            "\x1b[001;00m\x1b[31;01mtryme\x1b[00m",
-            " ",
-        ]
-    else:
-        assert compl.global_matches("try") == [
-            "\x1b[000;00m\x1b[37mtry\x1b[00m",
-            "\x1b[001;00m\x1b[31;01mtryme\x1b[00m",
-            " ",
-        ]
+    assert compl.global_matches("try") == [
+        "\x1b[000;00m\x1b[37mtry:\x1b[00m",
+        "\x1b[001;00m\x1b[31;01mtryme\x1b[00m",
+        " ",
+    ]
 
 
 def test_complete_global_exception(monkeypatch):
@@ -193,15 +186,14 @@ def test_complete_function_skipped():
     assert compl.attr_matches("str.split().") == []
 
 
-def test_unicode_in___dir__():
-    class Foo(object):
+def test_dir():
+    class Foo:
         def __dir__(self):
             return ["hello", "world"]
 
     compl = Completer({"a": Foo()}, ConfigForTest)
     matches = compl.attr_matches("a.")
     assert matches == ["hello", "world"]
-    assert type(matches[0]) is str
 
 
 class MyInstaller(Installer):
@@ -211,13 +203,13 @@ class MyInstaller(Installer):
         self.env_var += 1
 
 
-class TestInstaller(object):
+class TestInstaller:
     def test_check(self, monkeypatch, tmpdir):
         installer = MyInstaller(str(tmpdir), force=False)
         monkeypatch.setenv("PYTHONSTARTUP", "")
         assert installer.check() is None
         f = tmpdir.join("python_startup.py").ensure(file=True)
-        assert installer.check() == "%s already exists" % f
+        assert installer.check() == f"{f} already exists"
         monkeypatch.setenv("PYTHONSTARTUP", "foo")
         assert installer.check() == "PYTHONSTARTUP already defined: foo"
 

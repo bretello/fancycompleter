@@ -46,7 +46,8 @@ def test_config(tmphome, capsys, LineMatcher):
     assert out == ""
     LineMatcher(err.splitlines()).fnmatch_lines(
         [
-            "[*][*] error when importing ~/.mycfg: Exception('my_execfile_exc'*) [*][*]",
+            "[*][*] error when importing ~/.mycfg: "
+            "Exception('my_execfile_exc'*) [*][*]",
             '  File */fancycompleter.py", line *, in get_config',
             "    my_execfile(rcfile, mydict)",
             '  File */fancycompleter.py", line *, in my_execfile',
