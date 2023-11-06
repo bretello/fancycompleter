@@ -48,9 +48,9 @@ def test_config(tmphome, capsys, LineMatcher):
         [
             "[*][*] error when importing ~/.mycfg: "
             "Exception('my_execfile_exc'*) [*][*]",
-            '  File */fancycompleter.py", line *, in get_config',
+            '  File */fancycompleter/__init__.py", line *, in get_config',
             "    my_execfile(rcfile, mydict)",
-            '  File */fancycompleter.py", line *, in my_execfile',
+            '  File */fancycompleter/__init__.py", line *, in my_execfile',
             "    exec(code, mydict)",
             '  File "*/test_config0/.mycfg", line 1, in <module>',
             "    raise Exception('my_execfile_exc')",
