@@ -107,48 +107,17 @@ support for them. To enable colors, you can install `pyreadline` from
 [this fork](https://github.com/antocuni/pyreadline) using the following
 command:
 
-    pip install --upgrade https://github.com/antocuni/pyreadline/tarball/master
+```bash
+pip install --upgrade git+https://github.com/bretello/pyreadline
+```
 
 If you are using **Python 3**, `pyrepl` does not work, and thus is not
 installed. Your only option to get colors is to use a patched
 `readline`, as explained below.
 
-## I really want to use readline
-
-This method is not really recommended, but if you really want, you can
-use use a patched readline: you can find the patches in the `misc/`
-directory:
-
-> - for
->   [readline-5.2](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/readline-escape-5.2.patch)
-> - for
->   [readline-6.0](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/readline-escape-6.0.patch)
-
-You can also try one of the following precompiled versions, which has
-been tested on Ubuntu 10.10: remember to put them in a place where the
-linker can find them, e.g. by setting `LD_LIBRARY_PATH`:
-
-> - readline-6.0 for
->   [32-bit](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/libreadline.so.6-32bit)
-> - readline-6.0 for
->   [64-bit](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/libreadline.so.6-64bit)
-
-Once it is installed, you should double-check that you can find it, e.g.
-by running `ldd` on Python\'s `readline.so` module:
-
-    $ ldd /usr/lib/python2.6/lib-dynload/readline.so | grep readline
-            libreadline.so.6 => /home/antocuni/local/32/lib/libreadline.so.6 (0x00ee7000)
-
-Finally, you need to force `fancycompleter` to use colors, since by
-default, it uses colors only with `pyrepl`: you can do it by placing a
-custom config file in `~/.fancycompleterrc.py`. An example config file
-is
-[here](http://bitbucket.org/antocuni/fancycompleter/src/tip/misc/fancycompleterrc.py)
-(remind that you need to put a dot in front of the filename!).
-
 ## Customization
 
-To customize the configuration of fancycompleter, you need to put a file
+To customize the configuration of `fancycompleter`, you need to put a file
 named `.fancycompleterrc.py` in your home directory. The file must
 contain a class named `Config` inheriting from `DefaultConfig` and
 overridding the desired values.
