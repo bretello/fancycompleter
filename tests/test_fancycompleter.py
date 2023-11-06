@@ -1,13 +1,4 @@
-import sys
-
-from fancycompleter import (
-    Color,
-    Completer,
-    DefaultConfig,
-    Installer,
-    LazyVersion,
-    commonprefix,
-)
+from fancycompleter import Color, Completer, DefaultConfig, Installer, commonprefix
 
 
 class ConfigForTest(DefaultConfig):
@@ -245,20 +236,3 @@ class TestInstaller(object):
         installer.force = True
         assert installer.install()
         assert installer.env_var == 2
-
-
-class TestLazyVersion(object):
-    class MyLazyVersion(LazyVersion):
-        __count = 0
-
-        def _load_version(self):
-            assert self.__count == 0
-            self.__count += 1
-            return "0.1"
-
-    def test_lazy_version(self):
-        ver = self.MyLazyVersion("foo")
-        assert repr(ver) == "0.1"
-        assert str(ver) == "0.1"
-        assert ver == "0.1"
-        assert not ver != "0.1"
