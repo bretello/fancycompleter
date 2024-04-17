@@ -16,10 +16,9 @@ jobs:
           python-version: "3.9"
       - name: Install requirements
         run: |
-          pip install -U pip twine build
+          pip install nox
       - name: Build
-        run: python -m build
-      - run: check-manifest
+        run: nox -s build
       - run: twine check dist/*
       - name: Publish to PyPI
         env:

@@ -29,18 +29,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, windows-latest, macos-latest]
-        python: ["3.8"]
-        tox_env: ["coverage"]
+        python: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         include:
-          - tox_env: "py39-coverage"
-            os: ubuntu-20.04
-            python: "3.9"
-          - tox_env: "py310-coverage"
-            python: "3.10"
-            os: ubuntu-20.04
-          - tox_env: "py311-coverage"
-            python: "3.11"
-            os: ubuntu-20.04
+          - { os: ubuntu-latest, python: "pypy3.9" }
+          - { os: ubuntu-latest, python: "pypy3.10" }
 
     steps:
       - uses: actions/checkout@v4
@@ -51,35 +43,30 @@ jobs:
 
       - name: set PY_CACHE_KEY
         run: echo "PY_CACHE_KEY=$(python -c 'import hashlib, sys;print(hashlib.sha256(sys.version.encode()+sys.executable.encode()).hexdigest())')" >> $GITHUB_ENV
+
       - name: Cache .tox
         uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}/.tox/${{ matrix.tox_env }}
-          key: "tox|${{ matrix.os }}|${{ matrix.tox_env }}|${{ env.PY_CACHE_KEY }}|${{ hashFiles('tox.ini', 'setup.*') }}"
+          path: ${{ github.workspace }}/.nox/tests-${{ matrix.python }}
+          key: "tox-tests|${{ matrix.os }}|${{ matrix.python }}|${{ env.PY_CACHE_KEY }}|${{ hashFiles('noxfile.py', 'setup.py', 'pyproject.toml') }}"
 
       - name: Update tools and print info
         run: |
           pip install -U pip setuptools virtualenv
           pip list
 
-      - name: Install tox
-        run: pip install tox
-
-      - name: Setup tox environment
-        id: setup_tox
-        run: tox --notest -v -e ${{ matrix.tox_env }}
+      - name: Install nox
+        run: pip install nox==2023.4.22
 
       - name: Run tests
         run: |
-          python -m tox -v -e ${{ matrix.tox_env }}
+          nox -s "tests-${{ matrix.python }}" -- --cov-report=xml
 
       - name: Report coverage
-        if: always() && (contains(matrix.tox_env, 'coverage') && (steps.setup_tox.outcome == 'success'))
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          files: ./coverage-ci.xml
           flags: ${{ runner.os }}
-          name: ${{ matrix.tox_env }}
+          name: ${{ matrix.python }}
           fail_ci_if_error: true
