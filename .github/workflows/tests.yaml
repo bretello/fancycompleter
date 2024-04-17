@@ -63,7 +63,7 @@ jobs:
           nox -s "tests-${{ matrix.python }}" -- --cov-report=xml
 
       - name: Report coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
