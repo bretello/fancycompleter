@@ -34,7 +34,7 @@ setup(
     ],
     install_requires=[
         "pyrepl @ git+https://github.com/bretello/pyrepl@0.11.1",
-        "pyreadline;platform_system=='Windows'",
+        "pyreadline3;platform_system=='Windows'",
     ],
     extras_require={
         "tests": [
