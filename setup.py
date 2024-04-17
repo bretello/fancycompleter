@@ -1,5 +1,8 @@
 from setuptools import setup
 
+with open("README.md") as fh:
+    long_description = fh.read()
+
 setup(
     name="fancycompleter",
     setup_requires=["setuptools_scm"],
@@ -13,6 +16,8 @@ setup(
     author_email="anto.cuni@gmail.com",
     license="BSD",
     description="colorful TAB completion for Python prompt",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     keywords="rlcompleter prompt tab color completion",
     classifiers=[
         "Development Status :: 4 - Beta",
