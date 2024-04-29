@@ -35,7 +35,7 @@ def test_config(tmphome, capsys, LineMatcher):
     out, err = capsys.readouterr()
     assert out == ""
     assert err == (
-        "** error when setting up Config from ~/.mycfg: my_exc (%s:1) **\n" % p
+        f"** error when setting up Config from ~/.mycfg: my_exc ({p}:1) **\n"
     )
 
     # Error during execfile.
