@@ -428,9 +428,9 @@ class Installer:
     def check(self):
         PYTHONSTARTUP = os.environ.get("PYTHONSTARTUP")
         if PYTHONSTARTUP:
-            return "PYTHONSTARTUP already defined: %s" % PYTHONSTARTUP
+            return f"PYTHONSTARTUP already defined: {PYTHONSTARTUP}"
         if os.path.exists(self.filename):
-            return "%s already exists" % self.filename
+            return f"{self.filename} already exists"
 
     def install(self):
         import textwrap
@@ -454,12 +454,12 @@ class Installer:
 
     def set_env_var(self):
         if sys.platform == "win32":
-            os.system('SETX PYTHONSTARTUP "%s"' % self.filename)
-            print("%PYTHONSTARTUP% set to", self.filename)
+            os.system(f'SETX PYTHONSTARTUP "{self.filename}"')
+            print(f"%PYTHONSTARTUP% set to {self.filename}")
         else:
-            print("startup file written to", self.filename)
+            print(f"startup file written to {self.filename}")
             print("Append this line to your ~/.bashrc:")
-            print("    export PYTHONSTARTUP=%s" % self.filename)
+            print(f"    export PYTHONSTARTUP={self.filename}")
 
 
 if __name__ == "__main__":
