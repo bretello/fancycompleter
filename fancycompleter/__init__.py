@@ -8,7 +8,7 @@ import rlcompleter
 import sys
 import types
 from itertools import count
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 try:
     from .version import __version__
@@ -118,7 +118,7 @@ class DefaultConfig:
             self.use_colors = supports_color
 
 
-def my_execfile(filename: str, mydict: Dict[str, Any]):
+def my_execfile(filename: str, mydict: dict[str, Any]):
     with open(filename) as f:
         code = compile(f.read(), filename, "exec")
         exec(code, mydict)
@@ -218,7 +218,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
         # disable automatic insertion of '(' for global callables
         return word
 
-    def global_matches(self, text: str) -> List[str]:
+    def global_matches(self, text: str) -> list[str]:
         import keyword
 
         names = rlcompleter.Completer.global_matches(self, text)
@@ -227,7 +227,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             return [prefix]
 
         names.sort()
-        values: List[Optional[str]] = []
+        values: list[Optional[str]] = []
         for name in names:
             clean_name = name.rstrip(": ")
             if clean_name in keyword.kwlist:
@@ -241,7 +241,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             return self.color_matches(names, values)
         return names
 
-    def attr_matches(self, text: str) -> List[str]:
+    def attr_matches(self, text: str) -> list[str]:
         expr, attr = text.rsplit(".", 1)
         if "(" in expr or ")" in expr:  # don't call functions
             return []
@@ -298,7 +298,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             names.append(" ")
         return names
 
-    def color_matches(self, names: List[str], values):
+    def color_matches(self, names: list[str], values):
         matches = [
             self.color_for_obj(i, name, obj)
             for i, name, obj in zip(count(), names, values)
@@ -321,7 +321,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
         return f"\x1b[{i:03d};00m" + Color.set(color, name)
 
 
-def commonprefix(names: List[str], base: str = ""):
+def commonprefix(names: list[str], base: str = ""):
     """return the common prefix of all 'names' starting with 'base'"""
     if base:
         names = [x for x in names if x.startswith(base)]
