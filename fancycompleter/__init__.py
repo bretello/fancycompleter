@@ -2,6 +2,8 @@
 fancycompleter: colorful TAB completion for Python prompt
 """
 
+from __future__ import annotations
+
 import contextlib
 import os.path
 import rlcompleter
@@ -9,7 +11,7 @@ import sys
 import types
 from code import InteractiveConsole
 from itertools import count
-from typing import Any, Optional
+from typing import Any
 
 try:
     from .version import __version__
@@ -125,8 +127,8 @@ def my_execfile(filename: str, mydict: dict[str, Any]):
 
 
 class ConfigurableClass:
-    DefaultConfig: Optional[type] = None
-    config_filename: Optional[str] = None
+    DefaultConfig: type | None = None
+    config_filename: str | None = None
 
     def get_config(self, Config):
         if Config is not None:
@@ -228,7 +230,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             return [prefix]
 
         names.sort()
-        values: list[Optional[str]] = []
+        values: list[str | None] = []
         for name in names:
             clean_name = name.rstrip(": ")
             if clean_name in keyword.kwlist:
@@ -387,7 +389,7 @@ def setup_history(completer, persist_history: str):
     atexit.register(save_history)
 
 
-def interact(persist_history: Optional[str] = None):
+def interact(persist_history: str | None = None):
     """
     Main entry point for fancycompleter: run an interactive Python session
     after installing fancycompleter.
