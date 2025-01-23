@@ -31,3 +31,16 @@ jobs:
       #   if: github.event_name == 'release'
       #   uses: pypa/gh-action-pypi-publish@release/v1
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        if: github.event_name == 'release'
+        with:
+          name: "fancycompleter wheel"
+          path: dist/*whl
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        if: github.event_name == 'release'
+        with:
+          name: "fancycompleter sdist"
+          path: dist/*.tar.gz
