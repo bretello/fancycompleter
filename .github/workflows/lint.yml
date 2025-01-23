@@ -19,33 +19,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, windows-latest, macos-latest]
-        pyv: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        os: [ubuntu-latest]
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.pyv }}
-        uses: actions/setup-python@v5
+      - name: Setup python and uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: ${{ matrix.pyv }}
-
-      - name: set PY_CACHE_KEY
-        run: echo "PY_CACHE_KEY=$(python -c 'import hashlib, sys;print(hashlib.sha256(sys.version.encode()+sys.executable.encode()).hexdigest())')" >> $GITHUB_ENV
-      - name: Cache .tox
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/.nox/lint
-          key: "nox-lint|${{ matrix.os }}|${{ env.PY_CACHE_KEY }}|${{ hashFiles('tox.ini', 'setup.*') }}"
-
-      - name: Update pip/setuptools
-        run: |
-          pip install -U pip setuptools
-
+          version: "latest"
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+          cache-dependency-glob: |
+            setup.py
       - name: Install nox
-        run: pip install nox
-
-      - name: Version information
-        run: pip list
+        run: |
+          uv pip install nox
+          nox --version
 
       - name: Lint
         run: nox -s lint
