@@ -37,7 +37,7 @@ def lint(session: nox.Session) -> None:
     session.install("ruff", "mypy")
     session.install("-e", ".[tests]")
 
-    session.run("ruff", "check", "setup.py", "fancycompleter", "tests")
+    session.run("ruff", "check", "fancycompleter", "tests")
     # session.run("python", "-m", "mypy")
 
 
