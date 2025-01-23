@@ -54,3 +54,4 @@ venv.bak/
 dmypy.json
 
 .ruff_cache/
+fancycompleter/version.py
