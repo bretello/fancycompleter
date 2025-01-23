@@ -338,8 +338,12 @@ def commonprefix(names: list[str], base: str = ""):
     return s1
 
 
-def has_leopard_libedit(config):
-    # Detect if we are using Leopard's libedit.
+def has_libedit(config) -> bool:
+    # https://docs.python.org/3/library/readline.html#readline.backend
+    if sys.version_info >= (3, 13) and hasattr(config.readline, "backend"):
+        return config.readline.backend == "editline"
+
+    # Detect if we are using libedit/editline.
     # Adapted from IPython's rlineimpl.py.
     if config.using_pyrepl or sys.platform != "darwin":
         return False
@@ -353,7 +357,7 @@ def setup() -> Completer:
     """Install fancycompleter as the default completer for readline."""
     completer = Completer()
     readline = completer.config.readline
-    if has_leopard_libedit(completer.config):
+    if has_libedit(completer.config):
         readline.parse_and_bind("bind ^I rl_complete")
     else:
         readline.parse_and_bind("tab: complete")
