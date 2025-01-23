@@ -11,14 +11,6 @@ on:
       - "release-*"
   workflow_dispatch:
 
-env:
-  PYTEST_ADDOPTS: "-vv --cov-report=xml:coverage-ci.xml"
-  PIP_DISABLE_PIP_VERSION_CHECK: true
-
-defaults:
-  run:
-    shell: bash
-
 jobs:
   tests:
     name: Tests
@@ -28,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
         include:
           - { os: ubuntu-latest, python: "pypy3.9" }
@@ -36,37 +28,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5
+      - name: Setup python and uv
+        uses: astral-sh/setup-uv@v5
         with:
+          version: "latest"
           python-version: ${{ matrix.python }}
-
-      - name: set PY_CACHE_KEY
-        run: echo "PY_CACHE_KEY=$(python -c 'import hashlib, sys;print(hashlib.sha256(sys.version.encode()+sys.executable.encode()).hexdigest())')" >> $GITHUB_ENV
-
-      - name: Cache .tox
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/.nox/tests-${{ matrix.python }}
-          key: "tox-tests|${{ matrix.os }}|${{ matrix.python }}|${{ env.PY_CACHE_KEY }}|${{ hashFiles('noxfile.py', 'setup.py', 'pyproject.toml') }}"
-
-      - name: Update tools and print info
-        run: |
-          pip install -U pip setuptools virtualenv
-          pip list
-
+          enable-cache: true
+          cache-dependency-glob: |
+            setup.py
       - name: Install nox
-        run: pip install nox==2023.4.22
-
+        run: |
+          uv pip install nox
+          nox --version
       - name: Run tests
         run: |
           nox -s "tests-${{ matrix.python }}" -- --cov-report=xml
 
-      - name: Report coverage
-        uses: codecov/codecov-action@v3
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
+        if: github.actor != 'dependabot[bot]'
+        with:
+          fail_ci_if_error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          flags: ${{ runner.os }}
-          name: ${{ matrix.python }}
-          fail_ci_if_error: true

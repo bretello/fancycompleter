@@ -8,20 +8,26 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.9"
-      - name: Install requirements
+          version: "latest"
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: |
+            setup.py
+      - name: Install nox
         run: |
-          pip install nox
+          uv pip install nox
+          nox --version
       - name: Build
         run: nox -s build
-      - run: twine check dist/*
-      - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: "__token__"
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: twine upload dist/*
+
+      # disabled until we get permissions for PyPI
+      # - name: Upload package
+      #   if: github.event_name == 'release'
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+
