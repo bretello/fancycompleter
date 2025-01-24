@@ -190,7 +190,7 @@ class ConfigurableClass:
 
 class Completer(rlcompleter.Completer, ConfigurableClass):
     """
-    When doing someting like a.b.<TAB>, display only the attributes of
+    When doing something like a.b.<TAB>, display only the attributes of
     b instead of the full a.b.attr string.
 
     Optionally, display the various completions in different colors
@@ -449,7 +449,7 @@ def interact(persist_history: str | None = None, namespace: dict | None = None):
         setup_history(completer, persist_history)
 
     if completer.config.using_pyrepl and "__pypy__" not in sys.builtin_module_names:
-        # if we are on PyPy, we don't need to run a "fake" interpeter, as the
+        # if we are on PyPy, we don't need to run a "fake" interpreter, as the
         # standard one is fake enough :-)
         interact_pyrepl(namespace)
         sys.exit()
