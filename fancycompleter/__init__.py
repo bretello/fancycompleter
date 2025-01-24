@@ -195,7 +195,6 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
 
     def __init__(self, namespace: dict | None = None, Config=None):
         super().__init__(namespace)
-        rlcompleter.Completer.__init__(self, namespace)
         self.config = self.get_config(Config)
         self.config.setup()
         readline = self.config.readline
@@ -218,7 +217,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
         if not text:
             return ["\t", None][state]
 
-        return rlcompleter.Completer.complete(self, text, state)
+        return super().complete(text, state)
 
     def _callable_postfix(self, val, word):
         # disable automatic insertion of '(' for global callables
@@ -227,7 +226,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
     def global_matches(self, text: str) -> list[str]:
         import keyword
 
-        names = rlcompleter.Completer.global_matches(self, text)
+        names = super().global_matches(text)
         prefix = commonprefix(names)
         if prefix and prefix != text:
             return [prefix]
@@ -356,9 +355,9 @@ def has_libedit(config) -> bool:
     return config.readline.__doc__ and "libedit" in config.readline.__doc__
 
 
-def setup() -> Completer:
+def setup(namespace: dict | None) -> Completer:
     """Install fancycompleter as the default completer for readline."""
-    completer = Completer()
+    completer = Completer(namespace)
     readline = completer.config.readline
     if has_libedit(completer.config):
         readline.parse_and_bind("bind ^I rl_complete")
@@ -368,7 +367,7 @@ def setup() -> Completer:
     return completer
 
 
-def interact_pyrepl():
+def interact_pyrepl(namespace: dict | None = None):
     import sys
 
     from _pyrepl import readline
@@ -376,7 +375,10 @@ def interact_pyrepl():
 
     sys.modules["readline"] = readline
 
-    run_multiline_interactive_console(InteractiveConsole())
+    from _pyrepl.console import InteractiveColoredConsole
+
+    console = InteractiveColoredConsole(namespace)
+    run_multiline_interactive_console(console)
 
 
 def setup_history(completer, persist_history: str):
@@ -400,7 +402,7 @@ def setup_history(completer, persist_history: str):
     atexit.register(save_history)
 
 
-def interact(persist_history: str | None = None):
+def interact(persist_history: str | None = None, namespace: dict | None = None):
     """
     Main entry point for fancycompleter: run an interactive Python session
     after installing fancycompleter.
@@ -420,15 +422,20 @@ def interact(persist_history: str | None = None):
 
     By default, pyrepl is preferred and automatically used if found.
     """
-    import sys
 
-    completer = setup()
+    if namespace is None:
+        import __main__
+
+        namespace = __main__.__dict__
+
+    completer = setup(namespace)
     if persist_history is not None:
         setup_history(completer, persist_history)
+
     if completer.config.using_pyrepl and "__pypy__" not in sys.builtin_module_names:
         # if we are on PyPy, we don't need to run a "fake" interpeter, as the
         # standard one is fake enough :-)
-        interact_pyrepl()
+        interact_pyrepl(namespace)
         sys.exit()
 
 
