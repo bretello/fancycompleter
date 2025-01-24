@@ -40,19 +40,18 @@ def test_config(tmphome, capsys, LineMatcher):
 
     # Error during execfile.
     tmphome.ensure(MyCfg.config_filename)
-    cfgfile.write("raise Exception('my_execfile_exc')")
+    cfgfile.write("raise Exception('execfile_exc')")
     assert isinstance(cfg.get_config(None), DefaultCfg)
     out, err = capsys.readouterr()
     assert out == ""
     LineMatcher(err.splitlines()).fnmatch_lines(
         [
-            "[*][*] error when importing ~/.mycfg: "
-            "Exception('my_execfile_exc'*) [*][*]",
+            "[*][*] error when importing ~/.mycfg: Exception('execfile_exc'*) [*][*]",
             '  File */fancycompleter/__init__.py", line *, in get_config',
-            "    my_execfile(rcfile, mydict)",
-            '  File */fancycompleter/__init__.py", line *, in my_execfile',
-            "    exec(code, mydict)",
+            "    execfile(rcfile, namespace)",
+            '  File */fancycompleter/__init__.py", line *, in execfile',
+            "    exec(code, namespace)",
             '  File "*/test_config0/.mycfg", line 1, in <module>',
-            "    raise Exception('my_execfile_exc')",
+            "    raise Exception('execfile_exc')",
         ]
     )

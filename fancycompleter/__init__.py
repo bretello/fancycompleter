@@ -46,7 +46,7 @@ class Color:
 class DefaultConfig:
     consider_getitems = True
     prefer_pyrepl = True
-    use_colors = "auto"
+    use_colors: bool | str = "auto"
     readline = None  # set by setup()
     using_pyrepl = False  # overwritten by find_pyrepl
 
@@ -81,7 +81,7 @@ class DefaultConfig:
             self.using_pyrepl = True
             return _pyrepl.readline, True
 
-        try:
+        try:  # type: ignore[unreachable]
             import pyrepl.completing_reader
             import pyrepl.readline
         except ImportError:
@@ -130,10 +130,10 @@ class DefaultConfig:
             self.use_colors = supports_color
 
 
-def my_execfile(filename: str, mydict: dict[str, Any]):
+def execfile(filename: str, namespace: dict[str, Any]):
     with open(filename) as f:
         code = compile(f.read(), filename, "exec")
-        exec(code, mydict)
+        exec(code, namespace)
 
 
 class ConfigurableClass:
@@ -152,9 +152,9 @@ class ConfigurableClass:
                 raise ValueError("DefaultConfig cannot be None")
             return self.DefaultConfig()
 
-        mydict = {}
+        namespace: dict[str, Any] = {}
         try:
-            my_execfile(rcfile, mydict)
+            execfile(rcfile, namespace)
         except Exception as exc:
             import traceback
 
@@ -165,7 +165,7 @@ class ConfigurableClass:
             return self.DefaultConfig()
 
         try:
-            Config = mydict["Config"]
+            Config = namespace["Config"]
         except KeyError:
             if self.DefaultConfig is None:
                 raise ValueError("DefaultConfig cannot be None") from None
@@ -201,9 +201,12 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
     config_filename = ".fancycompleterrc.py"
 
     def __init__(self, namespace: dict | None = None, Config=None):
+        self.namespace: dict | None = None
         super().__init__(namespace)
         self.config = self.get_config(Config)
         self.config.setup()
+        assert isinstance(self.config.use_colors, bool)
+
         readline = self.config.readline
         if hasattr(readline, "_setup"):
             # this is needed to offer pyrepl a better chance to patch
@@ -243,7 +246,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             return [prefix]
 
         names.sort()
-        values: list[str | None] = []
+        values: list[Any] = []
         for name in names:
             clean_name = name.rstrip(": ")
             if clean_name in keyword.kwlist:
@@ -272,7 +275,9 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
 
         if hasattr(thisobject, "__class__"):
             words.add("__class__")
-            words.update(rlcompleter.get_class_members(thisobject.__class__))
+            words.update(
+                rlcompleter.get_class_members(thisobject.__class__),  # type: ignore[attr-defined]
+            )
         names = []
         values = []
         n = len(attr)
@@ -282,9 +287,8 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             noprefix = "__"
         else:
             noprefix = None
-        words = sorted(words)
         while True:
-            for word in words:
+            for word in sorted(words):
                 if word[:n] == attr and not (noprefix and word[: n + 1] == noprefix):
                     try:
                         val = getattr(thisobject, word)
@@ -314,7 +318,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             names.append(" ")
         return names
 
-    def color_matches(self, names: list[str], values):
+    def color_matches(self, names: list[str], values: list[Any]):
         matches = [
             self.color_for_obj(i, name, obj)
             for i, name, obj in zip(count(), names, values)
