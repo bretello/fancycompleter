@@ -106,3 +106,7 @@ strict_equality = true
 no_implicit_optional = true
 warn_unused_configs = true
 files = ["fancycompleter", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["_pyrepl.*", "pyrepl.*", "pyreadline.*"]
+ignore_missing_imports = true
