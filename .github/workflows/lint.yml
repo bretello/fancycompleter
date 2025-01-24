@@ -31,7 +31,7 @@ jobs:
           python-version: ${{ matrix.python }}
           enable-cache: true
           cache-dependency-glob: |
-            setup.py
+            pyproject.toml
       - name: Install nox
         run: |
           uv pip install nox
