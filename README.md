@@ -18,10 +18,6 @@ In the image above, strings are shown in green, functions in blue,
 integers and boolean in yellows, `None` in gray, types and classes in
 fuchsia. Everything else is plain white.
 
-`fancycompleter` is compatible with Python 3. However, by default colors
-don't work on Python 3, see the section [How do I get
-colors?](#how-do-i-get-colors) for details.
-
 ## Other features
 
 - To save space on screen, `fancycompleter` only shows the characters
@@ -80,24 +76,23 @@ details.
 
 ## How do I get colors?
 
-If you are using **PyPy**, you can stop reading now, as `fancycompleter`
-will work out of the box.
+If you are using **PyPy** or **CPython 3.13+**, you can stop reading now,
+as `fancycompleter` will work out of the box.
 
-If you are using **CPython on Linux/OSX** and you installed
-`fancycompleter` with `pip` or `easy_install`, they automatically
-installed `pyrepl` as a requirement, and you should also get colors out
-of the box. If for some reason you don't want to use `pyrepl`, you
-should keep on reading.
+If you are using **CPython on Linux/OSX** (<3.13), `fancycompleter` installs
+[`pyrepl`](https://github.com/bretello/pyrepl) as a dependency, and you
+should also get colors out of the box. If for some reason you don't want
+to use `pyrepl`, you should keep on reading.
 
 By default, in CPython line input and TAB completion are handled by [GNU
-readline](http://tiswww.case.edu/php/chet/readline/rltop.html) (at least
+readline](https://tiswww.case.edu/php/chet/readline/rltop.html) (at least
 on Linux). However, `readline` explicitly strips escape sequences from
 the completions, so completions with colors are not displayed correctly.
 
 There are two ways to solve it:
 
 > - (suggested) don't use `readline` at all and rely on
->   [pyrepl](http://codespeak.net/pyrepl/)
+>   [pyrepl](https://github.com/bretello/pyrepl)
 > - use a patched version of `readline` to allow colors
 
 By default, `fancycompleter` tries to use `pyrepl` if it finds it. To
@@ -113,12 +108,8 @@ support for them. To enable colors, you can install `pyreadline` from
 command:
 
 ```bash
-pip install --upgrade git+https://github.com/bretello/pyreadline
+pip install --upgrade git+https://github.com/antocuni/pyreadline
 ```
-
-If you are using **Python 3**, `pyrepl` does not work, and thus is not
-installed. Your only option to get colors is to use a patched
-`readline`, as explained below.
 
 ## Customization
 
@@ -137,7 +128,7 @@ won't see it.
 
 The issue is simply solved by avoiding to use the built-in prompt:
 instead, we use a pure Python replacement based on
-[code.InteractiveConsole](http://docs.python.org/library/code.html#code.InteractiveConsole).
+[code.InteractiveConsole](https://docs.python.org/3/library/code.html#code.InteractiveConsole).
 This brings us also some niceties, such as the ability to do multi-line
 editing of the history.
 
