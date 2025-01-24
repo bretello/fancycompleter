@@ -29,6 +29,7 @@ requires-python = ">=3.8"
 dynamic = ["version"]
 dependencies = [
     "pyreadline3;platform_system=='Windows'",
+    "pyrepl @ git+https://github.com/bretello/pyrepl@0.11.2 ; python_version < '3.13'",
 ]
 
 [project.urls]
@@ -76,6 +77,7 @@ ignore = ["F401"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["B011"]
+"setup.py" = ["E501"]
 
 [tool.pytest.ini_options]
 addopts = "--cov --cov-branch --no-cov-on-fail -ra --tb short -p pytester"

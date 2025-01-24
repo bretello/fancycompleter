@@ -9,7 +9,6 @@ import os.path
 import rlcompleter
 import sys
 import types
-from code import InteractiveConsole
 from itertools import count
 from typing import Any
 
@@ -75,16 +74,24 @@ class DefaultConfig:
     ]
 
     def find_pyrepl(self):
-        try:
+        if sys.version_info >= (3, 13):
             import _pyrepl.completing_reader
             import _pyrepl.readline
+
+            self.using_pyrepl = True
+            return _pyrepl.readline, True
+
+        try:
+            import pyrepl.completing_reader
+            import pyrepl.readline
         except ImportError:
             return None
+
         self.using_pyrepl = True
-        if hasattr(_pyrepl.completing_reader, "stripcolor"):
+        if hasattr(pyrepl.completing_reader, "stripcolor"):
             # modern version of pyrepl
-            return _pyrepl.readline, True
-        return _pyrepl.readline, False
+            return pyrepl.readline, True
+        return pyrepl.readline, False
 
     def find_pyreadline(self):
         try:
@@ -203,7 +210,11 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             # raw_input. Usually, it does at import time, but is we are under
             # pytest with output captured, at import time we don't have a
             # terminal and thus the raw_input hook is not installed
-            readline._setup(namespace or {})
+            if sys.version_info >= (3, 13):
+                readline._setup(namespace or {}) # internal _pyrepl implementation
+            else:
+                readline._setup()
+
         if self.config.use_colors:
             readline.parse_and_bind("set dont-escape-ctrl-chars on")
         if self.config.consider_getitems:
@@ -368,17 +379,22 @@ def setup(namespace: dict | None) -> Completer:
 
 
 def interact_pyrepl(namespace: dict | None = None):
-    import sys
+    if sys.version_info >= (3, 13):
+        from _pyrepl import readline
+        from _pyrepl.console import InteractiveColoredConsole
+        from _pyrepl.simple_interact import run_multiline_interactive_console
 
-    from _pyrepl import readline
-    from _pyrepl.simple_interact import run_multiline_interactive_console
+        console = InteractiveColoredConsole(namespace)
+        run_multiline_interactive_console(console)
+        sys.modules["readline"] = readline
+    else:
+        from pyrepl import readline
+        from pyrepl.simple_interact import run_multiline_interactive_console
 
-    sys.modules["readline"] = readline
+        sys.modules["readline"] = readline
 
-    from _pyrepl.console import InteractiveColoredConsole
-
-    console = InteractiveColoredConsole(namespace)
-    run_multiline_interactive_console(console)
+        run_multiline_interactive_console()
+    # TODO: restore old readline on exit?
 
 
 def setup_history(completer, persist_history: str):
