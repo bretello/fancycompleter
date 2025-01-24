@@ -165,7 +165,7 @@ def test_autocomplete():
     assert matches == ["A.abc_"]
     #
     # finally, at the next TAB, we display again all the completions available
-    # for this common prefix. Agai, we insert a spurious space to prevent the
+    # for this common prefix. Again, we insert a spurious space to prevent the
     # automatic completion of ANSI sequences
     matches = compl.attr_matches("A.abc_")
     assert sorted(matches) == [" ", "abc_1", "abc_2", "abc_3"]

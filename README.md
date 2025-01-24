@@ -116,7 +116,7 @@ pip install --upgrade git+https://github.com/antocuni/pyreadline
 To customize the configuration of `fancycompleter`, you need to put a file
 named `.fancycompleterrc.py` in your home directory. The file must
 contain a class named `Config` inheriting from `DefaultConfig` and
-overridding the desired values.
+overriding the desired values.
 
 ## What is really going on?
 
