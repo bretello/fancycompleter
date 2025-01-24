@@ -80,7 +80,7 @@ def test_complete_global():
     compl = Completer({"foobar": 1, "foobazzz": 2}, ConfigForTest)
     assert compl.global_matches("foo") == ["fooba"]
     matches = compl.global_matches("fooba")
-    assert set(matches) == set(["foobar", "foobazzz"])
+    assert set(matches) == {"foobar", "foobazzz"}
     assert compl.global_matches("foobaz") == ["foobazzz"]
     assert compl.global_matches("nothing") == []
 
