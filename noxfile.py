@@ -32,12 +32,14 @@ def tests(session: nox.Session) -> None:
     )
 
 
-@nox.session
+@nox.session()
 def lint(session: nox.Session) -> None:
+    session.install("pre-commit")
     session.install("-e", ".[dev]")
 
-    session.run("ruff", "check", "fancycompleter", "tests")
-    # session.run("python", "-m", "mypy")
+    args = *(session.posargs or ("--show-diff-on-failure",)), "--all-files"
+    session.run("pre-commit", "run", *args)
+    session.run("python", "-m", "mypy")
 
 
 @nox.session
