@@ -1,4 +1,5 @@
-from fancycompleter import Color, Completer, DefaultConfig, Installer, commonprefix
+from fancycompleter import Color, Completer, DefaultConfig, commonprefix
+from fancycompleter.__main__ import Installer
 
 
 class ConfigForTest(DefaultConfig):
