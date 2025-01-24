@@ -105,7 +105,10 @@ class DefaultConfig:
         if self.prefer_pyrepl:
             result = self.find_pyrepl()
             if result:
-                return result
+                readline, supports_color = result
+                if sys.version_info >= (3, 13):
+                    readline.backend = "_pyrepl"
+                return readline, supports_color
         if sys.platform == "win32":
             result = self.find_pyreadline()
             if result:
