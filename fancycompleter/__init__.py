@@ -381,7 +381,11 @@ def setup_history(completer, persist_history: str):
 
     readline = completer.config.readline
 
-    filename = persist_history if isinstance(persist_history, str) else "~/.history.py"
+    filename = (
+        persist_history
+        if isinstance(persist_history, str) and persist_history
+        else "~/.history.py"
+    )
 
     filename = os.path.expanduser(filename)
     if os.path.isfile(filename):
