@@ -211,7 +211,7 @@ class Completer(rlcompleter.Completer, ConfigurableClass):
             # pytest with output captured, at import time we don't have a
             # terminal and thus the raw_input hook is not installed
             if sys.version_info >= (3, 13):
-                readline._setup(namespace or {}) # internal _pyrepl implementation
+                readline._setup(namespace or {})  # internal _pyrepl implementation
             else:
                 readline._setup()
 
