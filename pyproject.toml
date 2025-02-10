@@ -42,7 +42,7 @@ tests = [
   "pytest-cov"
 ]
 dev = [
-  "ruff==0.9.2",
+  "ruff==0.9.6",
   "mypy",
   "fancycompleter[tests]"
 ]
