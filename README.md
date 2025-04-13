@@ -12,7 +12,7 @@ the stdlib's [rlcompleter](http://docs.python.org/library/rlcompleter.html) modu
 Its best feature is that the completions are displayed in different
 colors, depending on their type:
 
-![image](/screenshot.png)
+![image](https://raw.githubusercontent.com/bretello/fancycompleter/refs/heads/master/screenshot.png)
 
 In the image above, strings are shown in green, functions in blue,
 integers and boolean in yellows, `None` in gray, types and classes in
