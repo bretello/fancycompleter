@@ -40,7 +40,7 @@ fuchsia. Everything else is plain white.
 First, install the module with `pip`:
 
 ```bash
-pip install git+https://github.com/bretello/fancycompleter
+pip install fancycompleter
 ```
 
 Then, at the Python interactive prompt:
