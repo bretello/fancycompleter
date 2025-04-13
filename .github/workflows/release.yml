@@ -22,7 +22,7 @@ jobs:
 
       - name: Install nox
         run: |
-          uv pip install nox
+          uv pip install twine nox
           nox --version
       - name: Build
         run: nox -s build
