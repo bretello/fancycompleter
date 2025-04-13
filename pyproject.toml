@@ -29,7 +29,7 @@ requires-python = ">=3.8"
 dynamic = ["version"]
 dependencies = [
   "pyreadline3;platform_system=='Windows'",
-  "pyrepl @ git+https://github.com/bretello/pyrepl@0.11.2 ; python_version < '3.13'"
+  "pyrepl>=0.11.3; python_version < '3.13'"
 ]
 
 [project.urls]
