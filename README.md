@@ -2,6 +2,7 @@
 
 [![Tests](https://github.com/bretello/fancycompleter/actions/workflows/tests.yaml/badge.svg)](https://github.com/bretello/fancycompleter/actions/workflows/tests.yaml)
 [![codecov](https://codecov.io/gh/bretello/fancycompleter/graph/badge.svg?token=M70VF5GAP8)](https://codecov.io/gh/bretello/fancycompleter)
+[![PyPI version](https://img.shields.io/pypi/v/fancycompleter.svg)](https://pypi.org/project/fancycompleter/)
 
 ## What is is?
 
