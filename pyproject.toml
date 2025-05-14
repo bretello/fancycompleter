@@ -28,7 +28,7 @@ keywords = ["rlcompleter", "prompt", "color", "completion"]
 requires-python = ">=3.8"
 dynamic = ["version"]
 dependencies = [
-  "pyreadline3;platform_system=='Windows'",
+  "pyreadline3; platform_system=='Windows' and python_version < '3.13'",
   "pyrepl>=0.11.3; python_version < '3.13'"
 ]
 
