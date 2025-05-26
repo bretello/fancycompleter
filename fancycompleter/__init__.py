@@ -78,6 +78,8 @@ class DefaultConfig:
             import _pyrepl.completing_reader
             import _pyrepl.readline
 
+            sys.modules["readline"] = _pyrepl.readline
+
             self.using_pyrepl = True
             return _pyrepl.readline, True
 
